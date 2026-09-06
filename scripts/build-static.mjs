@@ -6,7 +6,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { createElement } from 'react';
 
 // Render the same React page without Vinext's Windows native shutdown failure.
-// No browser JavaScript is required by this institutional page.
+// The page includes a small form handler, rendered inline for standalone use.
 await mkdir('work', { recursive: true });
 await mkdir('dist/client', { recursive: true });
 const source = await readFile('app/page.tsx', 'utf8');

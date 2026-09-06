@@ -1,0 +1,21 @@
+import { readFileSync } from 'node:fs';
+import { runInNewContext } from 'node:vm';
+import assert from 'node:assert/strict';
+const html=readFileSync('index.html','utf8');
+const code=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
+assert.ok(code, 'Form handler included in standalone export');
+let valid=false, navigated=null;
+const listeners={};
+const values={customer:'Ana & João',phone:'(46) 99999-1234',vehicle:'Gol',service:'Freios',notes:'Ruído <teste>'};
+const form={dataset:{whatsapp:''},elements:{namedItem:name=>({value:values[name]})},reportValidity:()=>valid,addEventListener:(name,fn)=>listeners[name]=fn};
+const button={addEventListener:(name,fn)=>listeners[name]=fn};
+const status={textContent:''};const preview={textContent:'',hidden:true};
+const nodes={'whatsapp-request':form,'prepare-request':button,'request-status':status,'request-preview':preview};
+runInNewContext(code,{document:{getElementById:id=>nodes[id]},window:{location:{assign:url=>navigated=url}}});
+const event={preventDefault(){}};
+listeners.click(event);assert.equal(preview.hidden,true);assert.equal(navigated,null);
+valid=true;listeners.submit(event);assert.equal(preview.hidden,false);assert.equal(navigated,null);assert.ok(preview.textContent.includes('Ana & João'));assert.ok(preview.textContent.includes('\nVeículo: Gol'));assert.ok(status.textContent.includes('nenhum dado foi enviado'));
+listeners.input();assert.equal(preview.hidden,true);
+// Simulated destination, never contacted: verify URL construction only.
+form.dataset.whatsapp='5546999991234';listeners.click(event);const url=new URL(navigated);assert.equal(url.hostname,'wa.me');assert.equal(url.searchParams.get('text'),preview.textContent);
+console.log('Passed: validation, demo without transmission, message escaping, input reset, configured WhatsApp URL.');

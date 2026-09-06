@@ -8,7 +8,9 @@ Conteúdo: capa, oficina, motores/suspensão/freios, três avaliações reais, m
 
 O conteúdo fica em `app/page.tsx`, o estilo em `app/globals.css`. Execute `npm install` e `npm run build` para atualizar `index.html`. O comando `npm run dev` oferece prévia com atualização automática.
 
-O exportador estático renderiza os mesmos componentes React, sem JavaScript no navegador. Foi adotado porque o encerramento nativo do Vinext falhou neste ambiente Windows após a pré-renderização. A instalação e estrutura originais foram preservadas.
+O exportador estático renderiza os mesmos componentes React e inclui o script do formulário. Foi adotado porque o encerramento nativo do Vinext falhou neste ambiente Windows após a pré-renderização. A instalação e estrutura originais foram preservadas.
+
+O formulário final prepara uma mensagem localmente. Sem número confirmado, mostra uma prévia e não envia dados. Para ativar, preencha `data-whatsapp` no formulário de `app/page.tsx` com o número confirmado no formato internacional (55 + DDD + número) e gere novamente o site. O link wa.me abrirá a mensagem; o visitante confirma o envio no WhatsApp. Nenhum dado é persistido pelo site.
 
 ## Uso comercial
 
